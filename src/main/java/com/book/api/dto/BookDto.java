@@ -1,4 +1,4 @@
-package com.book.api.entity;
+package com.book.api.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,38 +13,28 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Book {
+public class BookDto {
     @Id
     private Long isbn;
 
-    @Column(nullable = false)
     @NotBlank(message = "This field is required")
     private String title;
 
-    @Column(nullable = false)
     @NotBlank(message = "This field is required")
     private String author;
 
-    @Column(nullable = false)
     @NotBlank(message = "This field is required")
     private String description;
 
-    @Column(nullable = false)
     @NotBlank(message = "This field is required")
     private String category;
 
-    @Column(nullable = false)
     @NotNull(message = "This field is required")
     private Double price;
 
-    @Column(nullable = false)
     @NotNull(message = "This field is required")
     private Integer quantity;
 
     private String bookCover;
     private String bookCoverUrl;
-
-
-
-
 }
