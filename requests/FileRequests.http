@@ -1,14 +1,16 @@
 ### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=IntelliJ IDEA
+GET http://localhost:8080/api/v1/file/heart.png
+
+###
+GET http://localhost:8080/api/v1/file/star.png
 
 ### POST uploading file
 POST http://localhost:8080/api/v1/file/upload
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="heart.png"
+Content-Disposition: form-data; name="file"; filename="star.png"
 Content-Type: image/png
 
-< ./files/heart.png
+< ./files/star.png
 --boundary--
