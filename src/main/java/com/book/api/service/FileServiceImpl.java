@@ -13,7 +13,6 @@ public class FileServiceImpl implements FileService {
     @Override
     public String uploadFile(String path, MultipartFile file) throws IOException {
         String filename = file.getOriginalFilename();
-
         String filePath = path + File.separator + filename;
 
         File f = new File(path);
