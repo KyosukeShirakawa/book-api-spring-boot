@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService{
@@ -27,7 +28,7 @@ public class BookServiceImpl implements BookService{
     @Value("${project.images}")
     private String path;
 
-    @Value(("${base.url}"))
+    @Value("${base.url}")
     private String baseUrl;
 
     private final BookRepository bookRepository;
@@ -41,7 +42,7 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public BookDto addBook(BookDto bookDto, MultipartFile file) throws IOException {
-    if(Files.exists(Paths.get(path + File.separator + file.getOriginalFilename()))) {
+    if(file != null && Files.exists(Paths.get(path + File.separator + file.getOriginalFilename()))) {
         throw new FileAlreadyExistsException("File already exists. Please give another file.");
     }
 
@@ -51,20 +52,25 @@ public class BookServiceImpl implements BookService{
     bookDto.setBookCover(uploadedFilename);
     bookDto.setBookCoverUrl(bookCoverUrl);
 
+    Book book = convertToBook(bookDto);
 
+    Book savedBook = bookRepository.save(book);
 
-
-        return null;
+        return convertToBookDto(savedBook);
     }
 
     @Override
     public BookDto getBook(Long isbn) {
-        return null;
+        Book book = bookRepository.findById(isbn).orElseThrow(()-> new RuntimeException("Book not found with isbn: " + isbn));
+
+        return convertToBookDto(book);
     }
 
     @Override
     public List<BookDto> getAllBooks() {
-        return List.of();
+        return bookRepository.findAll().stream()
+                .map((b) -> convertToBookDto(b))
+                .toList();
     }
 
     @Override

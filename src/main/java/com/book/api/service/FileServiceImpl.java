@@ -12,6 +12,9 @@ import java.nio.file.Paths;
 public class FileServiceImpl implements FileService {
     @Override
     public String uploadFile(String path, MultipartFile file) throws IOException {
+        if(file==null) {
+            return null;
+        }
         String filename = file.getOriginalFilename();
         String filePath = path + File.separator + filename;
 
