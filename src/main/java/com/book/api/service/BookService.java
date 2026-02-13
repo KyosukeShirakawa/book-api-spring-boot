@@ -13,8 +13,8 @@ public interface BookService {
 
     List<BookDto> getAllBooks();
 
-    BookDto updateBook(Long isbn, BookDto bookDto, MultipartFile file);
+    BookDto updateBook(Long isbn, BookDto bookDto, MultipartFile file) throws IOException;
 
-    String deleteBook(Long isbn);
+    String deleteBook(Long isbn) throws IOException;
 
 }

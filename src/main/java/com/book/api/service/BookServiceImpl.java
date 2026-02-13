@@ -74,13 +74,38 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public BookDto updateBook(Long isbn, BookDto bookDto, MultipartFile file) {
-        return null;
+    public BookDto updateBook(Long isbn, BookDto bookDto, MultipartFile file) throws IOException {
+        Book book = bookRepository.findById(isbn).orElseThrow(() -> new RuntimeException("Book not found with isbn: " + isbn));
+
+        String bookCover = bookDto.getBookCover();
+        String bookCoverUrl = bookDto.getBookCoverUrl();
+
+        if(file != null) {
+            Files.deleteIfExists(Paths.get(path + File.separator + bookCover));
+            bookCover = fileService.uploadFile(path, file);
+            bookCoverUrl = baseUrl + "/api/v1/file"+bookCover;
+            bookDto.setBookCover(bookCover);
+            bookDto.setBookCoverUrl(bookCoverUrl);
+        }
+
+        book.setTitle(bookDto.getTitle());
+        book.setAuthor(bookDto.getAuthor());
+        book.setPrice(bookDto.getPrice());
+        book.setDescription(bookDto.getDescription());
+        book.setCategory(bookDto.getCategory());
+        book.setQuantity(bookDto.getQuantity());
+
+        Book updatedBook = bookRepository.save(book);
+
+        return convertToBookDto(updatedBook);
     }
 
     @Override
-    public String deleteBook(Long isbn) {
-        return "";
+    public String deleteBook(Long isbn) throws IOException {
+        Book book = bookRepository.findById(isbn).orElseThrow(() -> new RuntimeException("Book not found with isbn: " + isbn));
+        Files.deleteIfExists(Paths.get(path + File.separator + book.getBookCover()));
+        bookRepository.delete(book);
+        return "Book deleted successfully with isbn: " + isbn;
     }
 
     private BookDto convertToBookDto(Book book) {

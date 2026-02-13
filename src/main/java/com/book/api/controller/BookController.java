@@ -44,6 +44,25 @@ public class BookController {
         return ResponseEntity.ok(bookService.getBook(isbn));
     }
 
+    @PutMapping("/{isbn}")
+    public ResponseEntity<BookDto> updatedBookByIsbn(
+            @PathVariable Long isbn,
+            @RequestPart String bookDtoJson,
+            @RequestPart MultipartFile file) throws IOException {
+
+        if(file== null || file.isEmpty()) {
+            file = null;
+        }
+        BookDto bookDto = convertJsonToBookDto(bookDtoJson);
+        return ResponseEntity.ok(bookService.updateBook(isbn, bookDto, file));
+    }
+
+    @DeleteMapping("/{isbn}")
+    public ResponseEntity<String> deleteBookByIsbn(@PathVariable Long isbn) throws IOException {
+        return ResponseEntity.ok(bookService.deleteBook(isbn));
+    }
+
+
 
     private BookDto convertJsonToBookDto(String bookDtoJson) {
         BookDto bookDto = new BookDto();
